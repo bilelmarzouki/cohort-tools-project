@@ -19,6 +19,7 @@ const mongoose = require("mongoose");
 const Student = require("./models/Student.model.js"); // ← YOUR IMPORT!
 const Cohort = require("./models/Cohort.model.js");
 
+
 mongoose
   .connect("mongodb://127.0.0.1:27017/cohort-tools-api")
   .then((x) => console.log(`Connected to Database: "${x.connections[0].name}"`))
@@ -80,6 +81,121 @@ app.get("/api/cohorts", async (req, res) => {
     console.log(error);
   }
 });
+
+
+///students API
+app.post("/api/students" ,async (req,res) =>{
+  try {
+    await Student.create(req.body)
+    res.send("done")
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.get("/api/students" , async(req,res)=>{
+  try {
+    const response = await Student.find().populate("cohort")
+    res.json(response)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.get("/api/students/cohort/:cohortId",async(req,res)=>{
+  try {
+    const {cohortId} =req.params
+    const response = await Student.find().populate("cohort")
+    res.json(response)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.get("/api/students/:studentId" , async(req,res)=>{
+  try {
+    const {studentId} =req.params
+    const response = await Student.findById(studentId).populate("cohort")
+    res.json(response)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.put("/api/students/:studentId" , async(req,res)=>{
+  try {
+    const {studentId} =req.params
+    const response = await Student.findByIdAndUpdate(studentId, req.body, {new:true})
+    res.json(response)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.delete("/api/students/:studentId" , async(req,res)=>{
+  try {
+    const {studentId} =req.params
+    await Student.findByIdAndDelete(studentId)
+    res.send("deleted")
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+
+
+
+
+// cohorts
+
+app.post("/api/cohorts" ,async (req,res) =>{
+  try {
+    await Cohort.create(req.body)
+    res.send("done")
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.get("/api/cohorts" , async(req,res)=>{
+  try {
+    const response = await Cohort.find()
+    res.json(response)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+
+app.get("/api/cohorts/:cohortId" , async(req,res)=>{
+  try {
+    const {cohortId} =req.params
+    const response = await Cohort.findById(cohortId)
+    res.json(response)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.put("/api/cohorts/:cohortId" , async(req,res)=>{
+  try {
+    const {cohortId} =req.params
+    const response = await Cohort.findByIdAndUpdate(cohortId, req.body, {new:true})
+    res.json(response)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.delete("/api/cohorts/:cohortId" , async(req,res)=>{
+  try {
+    const {cohortId} =req.params
+    await Cohort.findByIdAndDelete(cohortId)
+    res.send("deleted")
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 // START SERVER
 app.listen(port, () => {
