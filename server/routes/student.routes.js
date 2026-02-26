@@ -40,7 +40,11 @@ router.get("/:studentId" , async(req,res, next)=>{
   try {
     const {studentId} =req.params
     const response = await Student.findById(studentId).populate("cohort")
-    res.status(200).json(response)
+    if (response.length === 0) {
+      res.status(204).json(response)
+    } else {
+      res.status(200).json(response)
+    }
   } catch (error) {
     console.log(error.message)
     next(error)
