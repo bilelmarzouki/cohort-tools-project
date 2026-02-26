@@ -28,7 +28,7 @@ router.get("/" , async(req,res, next)=>{
 router.get("/cohort/:cohortId",async(req,res, next)=>{
   try {
     const {cohortId} =req.params
-    const response = await Student.find().populate("cohort")
+    const response = await Student.find({"cohort" :cohortId}).populate("cohort")
     res.status(200).json(response)
   } catch (error) {
     console.log(error.message)
