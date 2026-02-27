@@ -3,7 +3,10 @@ const express = require("express");
 const router= express.Router()
 
 const Cohort = require("../models/Cohort.model");
+const verifyToken = require("../middlewares/auth.middlewares")
+router.use(verifyToken)
 // you should add (api/cohorts) in the url
+
 router.post("/" ,async (req,res, next) =>{
   try {
     await Cohort.create(req.body)

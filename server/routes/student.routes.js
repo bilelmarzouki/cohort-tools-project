@@ -2,9 +2,10 @@ const express = require("express");
 
 const router= express.Router()
 const Student = require("../models/Student.model");
-
+const verifyToken = require("../middlewares/auth.middlewares")
+router.use(verifyToken)
  // you should add (api/students) in the url
-router.post("/" ,async (req,res, next) =>{
+router.post("/" , async (req,res, next) =>{
   try {
     //console.log(maria)
     await Student.create(req.body)
